@@ -4,6 +4,7 @@ import (
 	"os"
 	"fmt"
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"crypto/sha256"
 	"github.com/ezdiy/go-ssb"
@@ -22,6 +23,11 @@ func main() {
 		kp, _ = shs.GenEdKeyPair(bytes.NewReader(h[:]))
 	}
 	ds, _ := ssb.OpenDataStore(name + ".db", kp)
+	me := ds.GetFeed(ds.PrimaryRef)
+	for _, m := range os.Args[2:] {
+		fmt.Println("publishing ", m)
+		me.PublishMessageJSON(json.RawMessage(m))
+	}
 	fmt.Println("We're ", ds.PrimaryRef)
 	gossip.Replicate(ds,"")
 
