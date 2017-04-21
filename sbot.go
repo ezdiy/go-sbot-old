@@ -22,7 +22,7 @@ func main() {
 		h := sha256.Sum256([]byte(name))
 		kp, _ = shs.GenEdKeyPair(bytes.NewReader(h[:]))
 	}
-	ds, _ := ssb.OpenDataStore(name + ".db", kp)
+	ds, _ := ssb.OpenDataStore(nil, name + ".db", kp)
 	me := ds.GetFeed(ds.PrimaryRef)
 	for _, m := range os.Args[2:] {
 		fmt.Println("publishing ", m)
