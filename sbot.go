@@ -4,7 +4,6 @@ import (
 	"os"
 	"fmt"
 	"bytes"
-	"encoding/json"
 	"net/http"
 	"crypto/sha256"
 	"github.com/ezdiy/go-ssb"
@@ -27,7 +26,7 @@ func main() {
 	me := ds.GetFeed(ds.PrimaryRef)
 	for _, m := range os.Args[2:] {
 		fmt.Println("publishing ", m)
-		me.PublishMessageJSON(json.RawMessage(m))
+		me.PublishMessageJSON([]byte(m))
 	}
 	fmt.Println("We're ", ds.PrimaryRef)
 	gossip.Replicate(ds,"")
