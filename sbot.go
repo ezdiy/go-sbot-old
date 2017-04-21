@@ -11,6 +11,7 @@ import (
 	"github.com/ezdiy/go-ssb/gossip"
 	shs "github.com/ezdiy/secretstream/secrethandshake"
 	"github.com/andyleap/boltinspect"
+	_ "net/http/pprof"
 )
 
 
@@ -22,7 +23,7 @@ func main() {
 		h := sha256.Sum256([]byte(name))
 		kp, _ = shs.GenEdKeyPair(bytes.NewReader(h[:]))
 	}
-	ds, _ := ssb.OpenDataStore(nil, name + ".db", kp)
+	ds, _ := ssb.OpenDataStore(nil, name + ".db", kp, 0)
 	me := ds.GetFeed(ds.PrimaryRef)
 	for _, m := range os.Args[2:] {
 		fmt.Println("publishing ", m)
@@ -32,7 +33,7 @@ func main() {
 	gossip.Replicate(ds,"")
 
 	bi := boltinspect.New(ds.DB())
-	http.HandleFunc("/", bi.InspectEndpoint)
+	http.HandleFunc("/bolt", bi.InspectEndpoint)
 	http.ListenAndServe(":45079", nil)
 }
 
