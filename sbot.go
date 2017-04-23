@@ -18,7 +18,9 @@ func main() {
 	var kp *shs.EdKeyPair
 	var name = os.Args[1]
 	kp, _ = shs.LoadSSBKeyPair(name)
+	fmt.Println("init")
 	if kp == nil {
+		fmt.Println("failed loading")
 		h := sha256.Sum256([]byte(name))
 		kp, _ = shs.GenEdKeyPair(bytes.NewReader(h[:]))
 	}
